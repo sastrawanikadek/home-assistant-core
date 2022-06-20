@@ -42,7 +42,7 @@ CONF_FRONTEND_REPO = "development_repo"
 CONF_JS_VERSION = "javascript_version"
 EVENT_PANELS_UPDATED = "panels_updated"
 
-DEFAULT_THEME_COLOR = "#03A9F4"
+DEFAULT_THEME_COLOR = "#319795"
 
 
 DATA_PANELS = "frontend_panels"
@@ -145,18 +145,27 @@ class Manifest:
 
 MANIFEST_JSON = Manifest(
     {
-        "background_color": "#FFFFFF",
         "description": "Home automation platform that puts local control and privacy first.",
         "dir": "ltr",
         "display": "standalone",
+        "orientation": "portrait",
         "icons": [
             {
-                "src": f"/static/icons/favicon-{size}x{size}.png",
+                "src": f"/static/icons/maskable-icon-{size}x{size}.png",
                 "sizes": f"{size}x{size}",
                 "type": "image/png",
-                "purpose": "maskable any",
+                "purpose": "any",
             }
-            for size in (192, 384, 512, 1024)
+            for size in (192, 384, 512)
+        ]
+        + [
+            {
+                "src": f"/static/icons/maskable-icon-{size}x{size}.png",
+                "sizes": f"{size}x{size}",
+                "type": "image/png",
+                "purpose": "maskable",
+            }
+            for size in (192, 384, 512)
         ],
         "screenshots": [
             {
@@ -166,14 +175,12 @@ MANIFEST_JSON = Manifest(
             }
         ],
         "lang": "en-US",
-        "name": "Home Assistant",
-        "short_name": "Assistant",
+        "name": "E20 Smart Home",
+        "short_name": "Smart Home",
         "start_url": "/?homescreen=1",
+        "background_color": DEFAULT_THEME_COLOR,
         "theme_color": DEFAULT_THEME_COLOR,
-        "prefer_related_applications": True,
-        "related_applications": [
-            {"platform": "play", "id": "io.homeassistant.companion.android"}
-        ],
+        "prefer_related_applications": False,
     }
 )
 
@@ -349,6 +356,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     ):
         hass.http.register_static_path(f"/{path}", str(root_path / path), should_cache)
 
+    hass.http.register_static_path(
+        "/.well-known/assetlinks.json", str(root_path / "assetlinks.json"), False
+    )
     hass.http.register_static_path(
         "/auth/authorize", str(root_path / "authorize.html"), False
     )

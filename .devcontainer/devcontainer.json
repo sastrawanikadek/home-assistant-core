@@ -39,5 +39,8 @@
       "!include_dir_merge_list scalar",
       "!include_dir_merge_named scalar"
     ]
-  }
+  },
+  "mounts": [
+    "source=D:\\Projects\\home-assistant-frontend,target=/workspaces/frontend,type=bind,consistency=cached"
+  ]
 }
